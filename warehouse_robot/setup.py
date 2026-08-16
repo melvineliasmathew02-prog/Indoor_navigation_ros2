@@ -10,7 +10,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/launch', ['launch/sim.launch.py']),
+        ('share/' + package_name + '/launch', ['launch/sim.launch.py','launch/mapping.launch.py','launch/nav.launch.py']),
         ('share/' + package_name + '/description', ['description/warehouse_bot.urdf']),
         ('share/' + package_name + '/config', ['config/controllers.yaml', 'config/bridge_config.yaml','config/sim.rviz']),
     ],
