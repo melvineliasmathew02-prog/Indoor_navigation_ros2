@@ -128,6 +128,13 @@ def generate_launch_description():
         output='screen',
     )
 
+    rviz2 = Node(
+            package='rviz2',
+            namespace='',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d',os.path.join(pkg_warehouse_bot, 'config', 'sim.rviz')]
+        )
     # ---------------------------------------------------------
     # Launch everything
     # ---------------------------------------------------------
@@ -139,4 +146,5 @@ def generate_launch_description():
         spawn_robot,
         joint_state_broadcaster_spawner,
         diff_drive_controller_spawner,
+        rviz2,
     ])
