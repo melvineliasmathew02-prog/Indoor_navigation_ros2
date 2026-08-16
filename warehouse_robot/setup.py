@@ -12,7 +12,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', ['launch/sim.launch.py']),
         ('share/' + package_name + '/description', ['description/warehouse_bot.urdf']),
-        ('share/' + package_name + '/config', ['config/controllers.yaml', 'config/bridge_config.yaml']),
+        ('share/' + package_name + '/config', ['config/controllers.yaml', 'config/bridge_config.yaml','config/sim.rviz']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
