@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <robot name="warehouse_bot">
-    <!--base_footprint-->
     <link name="base_footprint"/>
-    <!--  base_link -->
   <link name="base_link">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -25,13 +23,11 @@
       <origin xyz="0.25 0 0.1" rpy="0 0 0"/>
     </collision>
   </link>
-<!--  base_joint -->
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
     <origin xyz="0 0 0.1" rpy="0 0 0"/>
   </joint>
-  <!--  laser_link -->
   <link name="laser_link">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -54,13 +50,11 @@
         <origin xyz="0 0 0.0" rpy="0 0 0"/>
     </collision>
   </link>
-   <!--  lidar_joint -->
 <joint name="lidar_joint" type="fixed">
     <parent link ="base_link" />
     <child link="laser_link" />
     <origin xyz="0.25 0 0.25" rpy="0 0 0"/>
   </joint>
-    <!--  left wheel link -->
     <link name="left_wheel_link">
         <inertial>
           <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -83,15 +77,12 @@
             <origin xyz="0 0 0" rpy="1.57 0 0"/>
         </collision>
     </link>
-    <!-- left_wheel_joint -->
     <joint name="left_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="left_wheel_link"/>
         <origin xyz="0 0.275 0" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
     </joint>
-
-    <!--  right wheel link -->
     <link name="right_wheel_link">
         <inertial>
           <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -114,15 +105,12 @@
             <origin xyz="0 0 0" rpy="1.57 0 0"/>
         </collision>
     </link>
-    <!-- right_wheel_joint -->
     <joint name="right_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="right_wheel_link"/>
         <origin xyz="0 -0.275 0" rpy="0 0 0"/>
         <axis xyz="0 1 0"/>
     </joint>
-
-     <!-- castor wheel link -->
     <link name="castor_wheel_link">
         <inertial>
           <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -145,119 +133,72 @@
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </collision>
     </link>
-    <!-- castor_wheel_joint -->
     <joint name="castor_wheel_joint" type="fixed">
         <parent link="base_link"/>
         <child link="castor_wheel_link"/>
         <origin xyz="0.375 0 -0.05" rpy="0 0 0"/>
     </joint>
-   
-
-   <!--gazebo part-->
-
   <ros2_control name="GazeboSimSystem" type="system">
 
     <hardware>
       <plugin>gz_ros2_control/GazeboSimSystem</plugin>
     </hardware>
-
-    <!-- LEFT WHEEL -->
-
     <joint name="left_wheel_joint">
-
       <command_interface name="velocity">
         <param name="min">-10</param>
         <param name="max">10</param>
       </command_interface>
-
       <state_interface name="position"/>
       <state_interface name="velocity"/>
-
     </joint>
-
-
-    <!-- RIGHT WHEEL -->
-
     <joint name="right_wheel_joint">
-
       <command_interface name="velocity">
         <param name="min">-10</param>
         <param name="max">10</param>
       </command_interface>
-
       <state_interface name="position"/>
       <state_interface name="velocity"/>
-
     </joint>
-
   </ros2_control>
 
-
-  <!-- ========================================================= -->
-  <!-- GZ ROS 2 CONTROL PLUGIN                                   -->
-  <!-- ========================================================= -->
-
   <gazebo>
-
     <plugin
       filename="libgz_ros2_control-system.so"
       name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-
       <parameters>
         /home/melvin/ihub_ws/install/warehouse_robot/share/warehouse_robot/config/controllers.yaml
       </parameters>
-
     </plugin>
-
   </gazebo>
 <gazebo reference="laser_link">
-
     <sensor name="lidar_sensor" type="gpu_lidar">
-
-      
         <pose>0 0 0 0 0 0</pose>
         <topic>/scan</topic>
         <update_rate>10</update_rate>
         <always_on>true</always_on>
         <visualize>true</visualize>
-
         <gz_frame_id>laser_link</gz_frame_id>
         <lidar>
-
             <scan>
-
-                <!-- 2D horizontal scan -->
                 <horizontal>
                     <samples>720</samples>
                     <resolution>1</resolution>
-
                     <min_angle>-3.14159265</min_angle>
                     <max_angle>3.14159265</max_angle>
                 </horizontal>
-
-                <!-- Only one vertical layer -->
                 <vertical>
                     <samples>1</samples>
                     <resolution>1</resolution>
-
                     <min_angle>0</min_angle>
                     <max_angle>0</max_angle>
                 </vertical>
-
             </scan>
-
-            <!-- Range characteristics -->
             <range>
                 <min>0.10</min>
                 <max>12.0</max>
                 <resolution>0.01</resolution>
             </range>
-
         </lidar>
-
     </sensor>
-
 </gazebo>
-
-
 </robot>
