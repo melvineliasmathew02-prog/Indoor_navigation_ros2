@@ -1,4 +1,4 @@
-AUTONOMOUS MOBILE ROBOT USING ROS2 AND NAV2
+ AUTONOMOUS MOBILE ROBOT USING ROS2 AND NAV2
 This package is created for simulating autonomous navigation of a simple mobile robot inside a simulated warehouse environment.
 The overall structure of the workspace is as follows
 .
