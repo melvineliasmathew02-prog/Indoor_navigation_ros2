@@ -10,9 +10,9 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/launch', ['launch/sim.launch.py','launch/mapping.launch.py','launch/nav.launch.py']),
+        ('share/' + package_name + '/launch', ['launch/sim.launch.py','launch/mapping.launch.py','launch/nav.launch.py','launch/warehouse_navigation.launch.py']),
         ('share/' + package_name + '/description', ['description/warehouse_bot.urdf']),
-        ('share/' + package_name + '/config', ['config/controllers.yaml', 'config/bridge_config.yaml','config/sim.rviz','config/nav2_params.yaml','config/nav.rviz']),
+        ('share/' + package_name + '/config', ['config/controllers.yaml', 'config/bridge_config.yaml','config/sim.rviz','config/nav2_params.yaml','config/nav.rviz','config/warehouse_navigation.yaml']),
         ('share/' + package_name + '/maps', ['maps/warehouse.yaml','maps/warehouse.pgm']),
     ],
     install_requires=['setuptools'],
@@ -27,7 +27,7 @@ setup(
         ],
     },
     entry_points={
-        'console_scripts': [
+        'console_scripts': ['warehouse_navigation_node = warehouse_robot.warehouse_navigation_node:main'
         ],
     },
 )
