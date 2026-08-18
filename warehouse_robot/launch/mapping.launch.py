@@ -8,10 +8,6 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    # ---------------------------------------------------------
-    # Package paths
-    # ---------------------------------------------------------
-
     pkg_warehouse_bot = get_package_share_directory('warehouse_robot')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
@@ -24,16 +20,8 @@ def generate_launch_description():
         pkg_warehouse_bot, 'config', 'bridge_config.yaml'
     )
 
-    # ---------------------------------------------------------
-    # Read URDF
-    # ---------------------------------------------------------
-
     with open(urdf_file, 'r') as infp:
         robot_description = infp.read()
-
-    # ---------------------------------------------------------
-    # Gazebo Harmonic
-    # ---------------------------------------------------------
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -43,10 +31,6 @@ def generate_launch_description():
             'gz_args': '-r /home/melvin/ihub_ws/src/warehouse_robot/world/tugbot_warehouse/simulation.sdf'
         }.items(),
     )
-
-    # ---------------------------------------------------------
-    # ROS-GZ Bridge (Configured via YAML file)
-    # ---------------------------------------------------------
 
     clock_bridge = Node(
         package='ros_gz_bridge',
@@ -60,10 +44,6 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}],
     )
 
-    # ---------------------------------------------------------
-    # Robot State Publisher
-    # ---------------------------------------------------------
-
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -73,10 +53,6 @@ def generate_launch_description():
             {'robot_description': robot_description, 'use_sim_time': True}
         ],
     )
-
-    # ---------------------------------------------------------
-    # Spawn robot into Gazebo
-    # ---------------------------------------------------------
 
     spawn_robot = Node(
         package='ros_gz_sim',
@@ -96,10 +72,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    # ---------------------------------------------------------
-    # Joint State Broadcaster
-    # ---------------------------------------------------------
-
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
@@ -111,10 +83,6 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}],
         output='screen',
     )
-
-    # ---------------------------------------------------------
-    # Differential Drive Controller
-    # ---------------------------------------------------------
 
     diff_drive_controller_spawner = Node(
         package='controller_manager',
@@ -145,9 +113,6 @@ def generate_launch_description():
             )
         )
     )
-    # ---------------------------------------------------------
-    # Launch everything
-    # ---------------------------------------------------------
 
     return LaunchDescription([
         gazebo,

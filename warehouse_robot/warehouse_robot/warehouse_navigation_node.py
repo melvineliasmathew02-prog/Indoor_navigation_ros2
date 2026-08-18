@@ -16,10 +16,6 @@ class WarehouseNavigationNode(Node):
     def __init__(self):
         super().__init__('warehouse_navigation_node')
 
-        # ---------------------------------------------------------
-        # Parameters
-        # ---------------------------------------------------------
-
         self.declare_parameter('frame_id', 'map')
         self.declare_parameter('waypoints', [
             2.0, 1.0, 0.0,
@@ -35,14 +31,6 @@ class WarehouseNavigationNode(Node):
         waypoint_values = self.get_parameter(
             'waypoints'
         ).get_parameter_value().double_array_value
-
-        # Convert flat parameter array:
-        #
-        # [x1, y1, yaw1, x2, y2, yaw2, ...]
-        #
-        # into:
-        #
-        # [(x1,y1,yaw1), (x2,y2,yaw2), ...]
 
         if len(waypoint_values) % 3 != 0:
             self.get_logger().error(
@@ -63,17 +51,10 @@ class WarehouseNavigationNode(Node):
 
             self.waypoints.append((x, y, yaw))
 
-        # ---------------------------------------------------------
-        # Navigation state
-        # ---------------------------------------------------------
-
         self.current_waypoint_index = 0
         self.goal_handle = None
         self.goal_active = False
 
-        # ---------------------------------------------------------
-        # Nav2 action client
-        # ---------------------------------------------------------
 
         self.nav_to_pose_client = ActionClient(
             self,
@@ -92,9 +73,7 @@ class WarehouseNavigationNode(Node):
         # Wait for Nav2 action server
         self.wait_for_nav2_server()
 
-    # =============================================================
-    # Wait for Nav2
-    # =============================================================
+
 
     def wait_for_nav2_server(self):
 
@@ -108,12 +87,8 @@ class WarehouseNavigationNode(Node):
             'Nav2 /navigate_to_pose action server available'
         )
 
-        # Start first waypoint
         self.send_next_waypoint()
 
-    # =============================================================
-    # Create quaternion from yaw
-    # =============================================================
 
     def quaternion_from_yaw(self, yaw):
 
@@ -126,9 +101,6 @@ class WarehouseNavigationNode(Node):
 
         return q
 
-    # =============================================================
-    # Create navigation goal
-    # =============================================================
 
     def create_goal(self, x, y, yaw):
 
@@ -147,9 +119,6 @@ class WarehouseNavigationNode(Node):
 
         return goal_pose
 
-    # =============================================================
-    # Send next waypoint
-    # =============================================================
 
     def send_next_waypoint(self):
 
@@ -157,21 +126,16 @@ class WarehouseNavigationNode(Node):
 
         if self.current_waypoint_index >= len(self.waypoints):
 
-            self.get_logger().info(
-                '========================================'
-            )
 
             self.get_logger().info(
-                'All warehouse waypoints completed!'
+                'All warehouse waypoints completed'
             )
 
             self.get_logger().info(
                 'Navigation mission finished.'
             )
 
-            self.get_logger().info(
-                '========================================'
-            )
+          
 
             return
 
@@ -208,9 +172,6 @@ class WarehouseNavigationNode(Node):
             self.goal_response_callback
         )
 
-    # =============================================================
-    # Goal response
-    # =============================================================
 
     def goal_response_callback(self, future):
 
@@ -228,7 +189,6 @@ class WarehouseNavigationNode(Node):
 
             return
 
-        # Nav2 rejected the goal
 
         if not self.goal_handle.accepted:
 
@@ -242,7 +202,6 @@ class WarehouseNavigationNode(Node):
 
             return
 
-        # Nav2 accepted the goal
 
         self.get_logger().info(
             f'Waypoint '
@@ -250,7 +209,7 @@ class WarehouseNavigationNode(Node):
             f'accepted by Nav2'
         )
 
-        # Request result
+
 
         result_future = self.goal_handle.get_result_async()
 
@@ -258,16 +217,12 @@ class WarehouseNavigationNode(Node):
             self.navigation_result_callback
         )
 
-    # =============================================================
-    # Navigation feedback
-    # =============================================================
+
 
     def feedback_callback(self, feedback_msg):
 
         feedback = feedback_msg.feedback
 
-        # NavigateToPose feedback contains estimated time
-        # remaining and distance remaining.
 
         try:
 
@@ -283,14 +238,10 @@ class WarehouseNavigationNode(Node):
 
         except AttributeError:
 
-            # Some Nav2 versions may provide different feedback
-            # fields.
+
 
             pass
 
-    # =============================================================
-    # Navigation result
-    # =============================================================
 
     def navigation_result_callback(self, future):
 
@@ -310,9 +261,6 @@ class WarehouseNavigationNode(Node):
 
         status = result.status
 
-        # ---------------------------------------------------------
-        # Goal succeeded
-        # ---------------------------------------------------------
 
         if status == GoalStatus.STATUS_SUCCEEDED:
 
@@ -324,13 +272,9 @@ class WarehouseNavigationNode(Node):
 
             self.current_waypoint_index += 1
 
-            # Move to next waypoint
 
             self.send_next_waypoint()
 
-        # ---------------------------------------------------------
-        # Goal cancelled
-        # ---------------------------------------------------------
 
         elif status == GoalStatus.STATUS_CANCELED:
 
@@ -340,9 +284,6 @@ class WarehouseNavigationNode(Node):
                 f'was cancelled.'
             )
 
-        # ---------------------------------------------------------
-        # Goal aborted / failed
-        # ---------------------------------------------------------
 
         elif status == GoalStatus.STATUS_ABORTED:
 
@@ -355,10 +296,6 @@ class WarehouseNavigationNode(Node):
             self.get_logger().error(
                 'Navigation mission stopped.'
             )
-
-        # ---------------------------------------------------------
-        # Unknown status
-        # ---------------------------------------------------------
 
         else:
 
